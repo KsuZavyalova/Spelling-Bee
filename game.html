@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spelling Bee</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+  <h1>Spelling Bee</h1>
+  <p>Привет, {{ username }}! Удачи в игре.</p>
+
+  <div class="letters">
+    <button class="letter-btn center">{{ center_letter }}</button>
+    {% for letter in other_letters %}
+      <button class="letter-btn">{{ letter }}</button>
+    {% endfor %}
+  </div>
+
+  <div id="current-word" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="action-buttons">
+    <button id="check-word">Проверить слово</button>
+    <button id="delete-last">Удалить последнюю букву</button>
+    <button id="clear-word">Очистить ввод</button>
+  </div>
+
+  <div id="result-message" role="alert"></div>
+
+  <button id="end-game-btn" style="margin-top:20px; padding: 10px 20px; font-size: 16px;">Завершить игру</button>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+  <p>Найдено слов: <span id="word-count">{{ found_words|length }}</span> / {{ total_possible }}</p>
+</div>
+
+<div class="sidebar">
+  <div class="history">
+    <h2>История слов</h2>
+    <ul id="found-words-list">
+      {% for word in found_words %}
+        <li>{{ word }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<script>
+  const currentWordElem = document.getElementById('current-word');
+  const resultMessage = document.getElementById('result-message');
+  const foundWordsList = document.getElementById('found-words-list');
+  const wordCountElem = document.getElementById('word-count');
+  let currentWord = '';
+
+  document.querySelectorAll('.letter-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      currentWord += button.textContent;
+      currentWordElem.textContent = currentWord;
+      resultMessage.textContent = '';
+    });
+  });
+
+  document.getElementById('delete-last').addEventListener('click', () => {
+    currentWord = currentWord.slice(0, -1);
+    currentWordElem.textContent = currentWord;
+    resultMessage.textContent = '';
+  });
+
+  document.getElementById('clear-word').addEventListener('click', () => {
+    currentWord = '';
+    currentWordElem.textContent = '';
+    resultMessage.textContent = '';
+  });
+
+  document.getElementById('check-word').addEventListener('click', () => {
+    if (currentWord.length < 4) {
+      resultMessage.style.color = 'red';
+      resultMessage.textContent = 'Слово должно быть не менее 4 букв.';
+      return;
+    }
+
+    fetch('/submit_word', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ word: currentWord })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.valid) {
+        resultMessage.style.color = 'green';
+        resultMessage.textContent = `Слово "${currentWord}" принято!`;
+        updateFoundWords(data.found_words);
+      } else {
+        resultMessage.style.color = 'red';
+        resultMessage.textContent = data.error || `Слово "${currentWord}" не подходит.`;
+      }
+      currentWord = '';
+      currentWordElem.textContent = '';
+    });
+  });
+
+  function updateFoundWords(words) {
+    foundWordsList.innerHTML = '';
+    words.forEach(word => {
+      const li = document.createElement('li');
+      li.textContent = word;
+      foundWordsList.appendChild(li);
+    });
+    wordCountElem.textContent = words.length;
+    updateProgressBar(words.length, {{ total_possible }});
+  }
+
+  function updateProgressBar(foundCount, totalCount) {
+    const progress = document.getElementById('progress-bar');
+    const percent = Math.min(100, (foundCount / totalCount) * 100);
+    progress.style.width = percent + '%';
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const found = parseInt(wordCountElem.textContent);
+    const total = {{ total_possible }};
+    updateProgressBar(found, total);
+  });
+
+  document.getElementById('end-game-btn').addEventListener('click', () => {
+    window.location.href = '/end_game';
+  });
+</script>
+
+</body>
+</html>

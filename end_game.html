@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Spelling Bee — Игра окончена</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="centered-box">
+    <h1>🎉 Спасибо за игру, <span class="highlight">{{ username }}</span>!</h1>
+    <p class="score">Ваш итоговый счёт: <strong>{{ score }}</strong> очков.</p>
+    <p>Найденные слова:</p>
+    <ul class="word-list">
+      {% for word in found_words %}
+        <li>{{ word }}</li>
+      {% endfor %}
+    </ul>
+    <a href="{{ url_for('index') }}" class="primary-btn">Начать новую игру</a>
+  </div>
+</body>
+</html>

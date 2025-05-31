@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spelling Bee</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="centered-box">
+    <h1>🐝 Добро пожаловать в <span class="highlight">Spelling Bee!</span></h1>
+    {% if error %}
+      <p class="error-msg">{{ error }}</p>
+    {% endif %}
+    <form method="post" action="/">
+      <label for="username">Введите ваше имя:</label><br>
+      <input type="text" name="username" id="username" value="{{ username }}" required />
+      <button type="submit" class="primary-btn">Начать игру</button>
+      <button type="button" id="infoBtn" class="info-circle-btn" title="О проекте">i</button>
+    </form>
+
+    <div class="rules-box">
+      <h2>📜 Правила игры</h2>
+      <ul>
+        <li>Используйте предложенные 7 букв для составления слов.</li>
+        <li>Слово должно содержать <strong>центральную букву</strong> (она выделена).</li>
+        <li>Слова должны быть длиной от <strong>4 букв</strong>.</li>
+        <li>Буквы можно <strong>повторять</strong> в словах (например, «рама»).</li>
+        <li>Принимаются только существительные и глаголы в начальной форме.</li>
+        <li>Не все существующие слова присутствуют в игре.</li>
+        <li>За каждое слово начисляются очки:</li>
+        <ul>
+          <li>4 буквы — 1 очко</li>
+          <li>5 букв — 5 очков</li>
+          <li>6 букв — 6 очков</li>
+          <li>7 букв — 7 очков</li>
+          <li>8+ букв — 2 × длина слова</li>
+        </ul>
+        <li>Цель — найти как можно больше допустимых слов!</li>
+      </ul>
+    </div>
+  </div>
+
+<div id="projectModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeModalBtn">&times;</span>
+    <h2>О проекте</h2>
+    <p>
+      Эта игра — русскоязычная адаптация Spelling Bee.
+      Она использует вариацию словаря Зализняка для проверки слов, однако могут попадаться странные формы слов.
+    </p>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById("projectModal");
+  const infoBtn = document.getElementById("infoBtn");
+  const closeBtn = document.getElementById("closeModalBtn");
+
+  infoBtn.onclick = () => { modal.style.display = "block"; };
+  closeBtn.onclick = () => { modal.style.display = "none"; };
+  window.onclick = (event) => {
+    if (event.target === modal) modal.style.display = "none";
+  };
+</script>
+
+
+</body>
+</html>
