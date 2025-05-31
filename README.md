@@ -17,7 +17,7 @@
 
 1. Клонируйте репозиторий:
     ```bash
-    git clone https://github.com/yourusername/spelling-bee.git
+    git clone https://github.com/KsuZavyalova/Spelling-Bee.git
     cd spelling-bee
     ```
 
