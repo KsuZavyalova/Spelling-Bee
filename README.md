@@ -49,7 +49,7 @@ flask run
 http://127.0.0.1:5000/
 
 ## Структура проекта
-
+```
 spelling-bee/
 ├── app.py
 ├── main.py
@@ -61,4 +61,4 @@ spelling-bee/
 ├── static/
 │ └── style.css
 └── zalizniak_lemmas_cleaned.pkl
-
+```
