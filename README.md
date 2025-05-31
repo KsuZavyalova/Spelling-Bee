@@ -55,11 +55,10 @@ spelling-bee/
 ├── main.py
 ├── requirements.txt
 ├── templates/
-│   ├── end_game.html
-│   ├── game.html
-│   └── index.html
+│ ├── end_game.html
+│ ├── game.html
+│ └── index.html
 ├── static/
-│   └── style.css
+│ └── style.css
 └── zalizniak_lemmas_cleaned.pkl
-
 
