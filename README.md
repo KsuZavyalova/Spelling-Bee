@@ -51,15 +51,15 @@ http://127.0.0.1:5000/
 ## Структура проекта
 
 spelling-bee/
-│
 ├── app.py
 ├── main.py
-├── requirements.txt 
+├── requirements.txt
 ├── templates/
 │   ├── end_game.html
 │   ├── game.html
 │   └── index.html
-├── static/ 
+├── static/
 │   └── style.css
 └── zalizniak_lemmas_cleaned.pkl
+
 
